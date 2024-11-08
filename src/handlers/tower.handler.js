@@ -5,7 +5,7 @@ import { getUserBySocket } from "../session/user.session.js";
 import { createResponse } from "../utils/response/createResponse.js";
 
 
-const towerPurchaseHandler = async ({ socket, userId, payload }) => {
+export const towerPurchaseHandler = async ({ socket, userId, payload }) => {
     // 유저가 접속한 게임세션 찾기
     // 게임에 속한 유저 데이터 중 towers 배열에 구매요청한 타워 추가
     // 타워구매 응답패킷 만들어 클라이언트에 반환
@@ -36,4 +36,7 @@ const towerPurchaseHandler = async ({ socket, userId, payload }) => {
     socket.write(towerPurchaseResponse);
 }
 
-export default towerPurchaseHandler;
+export const attackEnemeyHandler = async ({ socket, userId, payload }) => {
+    
+
+}
