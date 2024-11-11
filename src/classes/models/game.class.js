@@ -42,9 +42,9 @@ class Game {
     // this.intervalManager.removePlayer(userId);
   }
 
-  getOpponentUserId(userId) {
+  getOpponentUser(userId) {
     const opponentUser = this.users.find((user) => user.id !== userId);
-    return opponentUser.id;
+    return opponentUser
   }
 
   // getUserHighScore(userId) {
