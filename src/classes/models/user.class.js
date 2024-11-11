@@ -1,17 +1,21 @@
-import { addEnemyTowerNotification } from "../../utils/notification/game.notification.js";
-import Tower from "./tower.class.js";
+import { addEnemyTowerNotification } from '../../utils/notification/game.notification.js';
+import Tower from './tower.class.js';
 import { config } from '../../config/config.js';
 
 class User {
   constructor(id, socket) {
     this.id = id;
     this.socket = socket;
-    this.lastUpdateTime = Date.now();
     this.sequence = 0;
-    this.score = 0;
+    this.lastUpdateTime = Date.now();
+
     this.towers = [];
-    this.towerUniqueId = 0;
-    this.gold = 3152;
+    this.monsters = [];
+    this.score = 0;
+    this.baseHp = config.game.initData.baseHp;
+    this.gold = config.game.initData.gold;
+
+    this.gameId = null;
     this.state = config.game.state.waiting;
   }
 
@@ -19,26 +23,43 @@ class User {
     return ++this.sequence;
   }
 
-  initializeTower = () => {
+  init = () => {
     this.towers = [];
+    this.monsters = [];
+    this.score = 0;
+    this.baseHp = config.game.initData.baseHp;
+    this.gold = config.game.initData.gold;
+
+    this.gameId = null;
+    this.state = config.game.state.waiting;
   };
 
-    getAllTowers = () => {
+  getAllTowers = () => {
     return this.towers;
   };
 
-    towerNumber = () => {
+  towerNumber = () => {
     return this.towers.length;
   };
-  
-  // 
-    bindTower = (socket, x, y) => {
-     const tower = new Tower(x, y, this.towerUniqueId++);
-     this.towers.push(tower);
 
-     console.log('towerId?:', this.towerUniqueId)
+  getUserMonsterIndex(monsterId) {
+    const monsterIndex = this.monsters.findIndex((monster) => monster.id === monsterId);
+    return monsterIndex;
+  }
 
-     socket.write(addEnemyTowerNotification(this.towerUniqueId, x, y))
+  removeMonster(monsterIndex) {
+    const removedMonster = this.monsters.splice(monsterIndex, 1)[0];
+    return removedMonster;
+  }
+
+  //
+  bindTower = (socket, x, y) => {
+    const tower = new Tower(x, y, this.towerUniqueId++);
+    this.towers.push(tower);
+
+    console.log('towerId?:', this.towerUniqueId);
+
+    socket.write(addEnemyTowerNotification(this.towerUniqueId, x, y));
     return tower;
   };
 }
